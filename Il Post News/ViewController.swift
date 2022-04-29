@@ -125,7 +125,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             for item in rssItems {
                 tempImageUrl = self.checkForUrls(text: item.description)[0]
                 tempDescription = String(item.description[item.description.endIndex(of: "</div>")!...])
-                print("tempImgUrl: \(tempImageUrl) tempDescr: \(tempDescription)")
                 self.viewModels.append(NewsTableViewCellViewModel(
                     title: item.title,
                     subtitle: tempDescription,
@@ -146,7 +145,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         APICaller.shared.getTopStories { [weak self]result in
             switch result{
             case .success(let articles):
-                print("succes")
                 self?.articles = articles
                 self?.viewModels = articles.compactMap({
                     NewsTableViewCellViewModel(
@@ -234,7 +232,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
-    didism
+    
     
 }
 
