@@ -19,18 +19,26 @@ class WebView: UIViewController, WKNavigationDelegate, WKUIDelegate {
         let webView = WKWebView(frame: .zero, configuration: configuration)
         return webView
     }()
+    
     var strinUrl: String = "Anonymous"
     
     let jsCode = "var divsToHide = document.getElementsByClassName('insideHeader'); for(var i = 0; i < divsToHide.length; i++){divsToHide[i].style.display = 'none';}" +
     "divsToHide2 = document.getElementsByClassName('userBar'); for(var i = 0; i < divsToHide2.length; i++){divsToHide2[i].style.display = 'none';}"
     
+    var isHomeAfterLogin = false
+    var isHomeAfterLogout = false
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let spinner: UIActivityIndicatorView = UIActivityIndicatorView(style: .large)
         let myURL = URL(string:strinUrl)
         let myRequest = URLRequest(url: myURL!)
-        webView.navigationDelegate = self
+        webView.allowsBackForwardNavigationGestures = true
         webView.load(myRequest)
+//        view.addSubview(spinner)
+//
+//        spinner.startAnimating()
         
         
         
@@ -44,9 +52,30 @@ class WebView: UIViewController, WKNavigationDelegate, WKUIDelegate {
             webView.evaluateJavaScript(jsCode, completionHandler: nil)
         }
     
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+
+        if let urlStr = navigationAction.request.url?.absoluteString{
+            if urlStr == "https://www.ilpost.it/" && (isHomeAfterLogin || isHomeAfterLogout) {
+                if isHomeAfterLogin {
+                    isHomeAfterLogin = false
+                } else {
+                    isHomeAfterLogout = false
+                }
+                decisionHandler(.cancel)
+                self.dismiss(animated: true)
+                print(urlStr)
+                return
+            } else if urlStr == "https://www.ilpost.it/wp-login.php?redirect_to=https://www.ilpost.it" {
+                isHomeAfterLogin = true
+            } else if urlStr.contains("action=logout") {
+                isHomeAfterLogout = true
+            }
+           }
+        decisionHandler(.allow)
+    }
+    
     override func loadView() {
-        let webConfiguration = WKWebViewConfiguration()
-        webView = WKWebView(frame: .zero, configuration: webConfiguration)
+        webView.navigationDelegate = self
         webView.uiDelegate = self
         view = webView
     }

@@ -35,13 +35,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
         
         title = "Il Post News"
-        
-        let button = UIButton(frame: CGRect(x: 100, y: 100, width: 100, height: 50))
-        button.backgroundColor = .green
-        button.setTitle("Test Button", for: .normal)
-        button.addTarget(self, action: #selector(login(sender:)), for: .touchUpInside)
+//
+//        let button = UIButton(frame: CGRect(x: 100, y: 100, width: 100, height: 50))
+//        button.backgroundColor = .green
+//        button.setTitle("Test Button", for: .normal)
+//        button.addTarget(self, action: #selector(login(sender:)), for: .touchUpInside)
         let loginBtn = UIBarButtonItem.init(title: "LOGIN", style: .done, target: self, action: #selector(self.login(sender:)))
         self.navigationItem.rightBarButtonItem = loginBtn
+        
+        let goToSiteBtn = UIBarButtonItem.init(title: "Sito completo", style: .plain, target: self, action: #selector(self.goToSite(sender:)))
+        self.navigationItem.leftBarButtonItem = goToSiteBtn
         
         view.addSubview(tableView)
         tableView.delegate = self
@@ -61,6 +64,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @objc func login(sender: UIBarButtonItem) {
         let newVC = WebView()
         newVC.strinUrl = "https://www.ilpost.it/wp-login.php?redirect_to=https://www.ilpost.it"
+        self.present(newVC, animated: true)
+    }
+    
+    @objc func goToSite(sender: UIBarButtonItem) {
+        let newVC = WebView()
+        newVC.strinUrl = "https://www.ilpost.it/"
         self.present(newVC, animated: true)
     }
     
